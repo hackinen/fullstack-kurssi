@@ -27,7 +27,7 @@ const App = () => {
       <h2>Countries</h2>
       <InputField text={'find countries: '} val={newFilterValue} handle={handleFilterChange} />
       
-      <ListCountries countries={filteredCountries} />
+      <ListCountries countries={filteredCountries} setNewFilterValue={setNewFilterValue}/>
     </div>
   )
 
@@ -44,7 +44,7 @@ const InputField = ({text, val, handle}) => {
     )
 }
 
-const ListCountries = ({countries}) => {
+const ListCountries = ({countries, setNewFilterValue}) => {
     if (countries.length > 10) {
         return (<div>Too many countries, specify another filter</div>)
     } else if (countries.length === 1) {
@@ -56,7 +56,7 @@ const ListCountries = ({countries}) => {
     } else {
         return ( 
             <div>
-                {countries.map(country => <Country key={country.name} country={country} />)}
+                {countries.map(country => <Country key={country.name} country={country} setNewFilterValue={setNewFilterValue} />)}
             </div>
         )
     }
@@ -72,7 +72,7 @@ const ShowOneCountry = ({country}) => {
             
             <h2>languages</h2>
                 <ul>
-                    {country.languages.map(language => <li>{language.name}</li>)}
+                    {country.languages.map(language => <li key={language.name}>{language.name}</li>)}
                 </ul>
 
             <img 
@@ -85,9 +85,19 @@ const ShowOneCountry = ({country}) => {
     )
 }
 
-const Country = ({country}) => {
+const Country = ({country, setNewFilterValue}) => {
+
     return(
-        <div>{country.name}</div>
+        <div>
+            {country.name + " "}
+            <button 
+                type="button"
+                onClick={(event) => {
+                    setNewFilterValue(country.name)
+                }}
+            >show
+            </button>
+        </div>
     )
   }
 
