@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import peopleService from '../services/people'
 import people from '../services/people'
+import '../index.css'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilterValue, setNewFilterValue] = useState('')
-
+  const [notification, setNotification] = useState(null)
+  const [messageType, setmessageType] = useState("notification")
   const filteredPersons = persons.filter(person => person.name.includes(newFilterValue))
 
   useEffect(() => {
@@ -37,7 +39,10 @@ const App = () => {
               .update(updatedPerson.id, updatedPerson)
               .then(data => {
                 peopleService.getAll().then((updated) => setPersons(updated))
+                showNotification(`Updated the number of ${updatedPerson.name}`,"notification")
               })
+              showNotification(`Information of ${updatedPerson.name} has already been removed from server`,"error")
+      
           }
       } else {
         peopleService
@@ -45,11 +50,21 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson))
           })
+
+        showNotification(`Added ${personObject.name}`,"notification")
       }
 
       setNewName('')
       setNewNumber('')
       
+  }
+
+  const showNotification = (message, type) => {
+    setmessageType(type)
+    setNotification(message)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
   const deletePerson = (person) => {
@@ -60,7 +75,12 @@ const App = () => {
       .remove(person.id)
       .then(data => {
         peopleService.getAll().then((updatedPersons) => setPersons(updatedPersons))
+        showNotification(`${person.name} removed succesfully`,"notification")
       })
+      .catch(error => {
+        showNotification(`Information of ${person.name} has already been removed from server`,"error")
+      })
+      
     }
     
   }
@@ -80,6 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} messageType={messageType} />
       <InputField text={'filter shown with '} val={newFilterValue} handle={handleFilterChange} />
       
       <h2>add a new</h2>
@@ -128,7 +149,18 @@ const Person = ({person, deleteThisPerson}) => {
           <button onClick={deleteThisPerson}>delete</button>
         </div>
     )
+}
+
+const Notification = ({ message, messageType }) => {
+  if (message === null) {
+    return null
   }
 
+  return (
+    <div className={messageType}>
+      {message}
+    </div>
+  )
+}
 
 export default App
