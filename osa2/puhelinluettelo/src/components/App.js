@@ -41,7 +41,13 @@ const App = () => {
       
   }
 
-
+  const deletePerson = (person) => {
+    peopleService
+      .remove(person.id)
+      .then(data => {
+        peopleService.getAll().then((updatedPersons) => setPersons(updatedPersons))
+      })
+  }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -68,7 +74,7 @@ const App = () => {
       </form>
       
       <h2>Numbers</h2>
-      <ListPersons persons={filteredPersons} />
+      <ListPersons persons={filteredPersons} deletePerson={deletePerson} />
     </div>
   )
 
@@ -85,17 +91,26 @@ const InputField = ({text, val, handle}) => {
     )
 }
 
-const ListPersons = ({persons}) => {
+const ListPersons = ({persons, deletePerson}) => {
     return ( 
         <div>
-            {persons.map(person => <Person key={person.name} person={person} />)}
+            {persons.map(person => 
+              <Person 
+                key={person.name}
+                person={person} 
+                deleteThisPerson={() => deletePerson(person)}
+            />)}
         </div>
     )
 }
 
-const Person = ({person}) => {
+const Person = ({person, deleteThisPerson}) => {
     return(
-        <div>{person.name} {person.number}</div>
+        <div>
+          {person.name} 
+          {person.number}
+          <button onClick={deleteThisPerson}>delete</button>
+        </div>
     )
   }
 
