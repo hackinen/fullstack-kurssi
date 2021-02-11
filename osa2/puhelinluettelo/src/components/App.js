@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import peopleService from '../services/people'
+import people from '../services/people'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
@@ -27,7 +28,17 @@ const App = () => {
       }
 
       if (persons.map(person => person.name).includes(newName)) {
-          alert(`${newName} is already added to phonebook`);
+          const replace = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
+          const thisPerson = persons.find(p => p.name == newName)
+          const updatedPerson = {...thisPerson, number: newNumber}
+
+          if (replace) {
+            peopleService
+              .update(updatedPerson.id, updatedPerson)
+              .then(data => {
+                peopleService.getAll().then((updated) => setPersons(updated))
+              })
+          }
       } else {
         peopleService
           .create(personObject)
@@ -42,11 +53,16 @@ const App = () => {
   }
 
   const deletePerson = (person) => {
-    peopleService
+    const confirmed = window.confirm(`Delete ${person.name}`)
+
+    if (confirmed) {
+      peopleService
       .remove(person.id)
       .then(data => {
         peopleService.getAll().then((updatedPersons) => setPersons(updatedPersons))
       })
+    }
+    
   }
 
   const handleNameChange = (event) => {
@@ -107,7 +123,7 @@ const ListPersons = ({persons, deletePerson}) => {
 const Person = ({person, deleteThisPerson}) => {
     return(
         <div>
-          {person.name} 
+          {person.name + " "} 
           {person.number}
           <button onClick={deleteThisPerson}>delete</button>
         </div>
