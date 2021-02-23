@@ -41,17 +41,23 @@ const App = () => {
                 peopleService.getAll().then((updated) => setPersons(updated))
                 showNotification(`Updated the number of ${updatedPerson.name}`,"notification")
               })
-              showNotification(`Information of ${updatedPerson.name} has already been removed from server`,"error")
-      
+              .catch(error => {
+                console.log(error)
+                showNotification(`Information of ${updatedPerson.name} has already been removed from server`,"error")
+              })
+              
           }
       } else {
         peopleService
           .create(personObject)
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson))
+            showNotification(`Added ${personObject.name}`,"notification")
           })
-
-        showNotification(`Added ${personObject.name}`,"notification")
+          .catch(error => {
+            showNotification(error.response.data.error,"error")
+          })
+        
       }
 
       setNewName('')
