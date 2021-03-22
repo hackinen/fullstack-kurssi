@@ -41,6 +41,13 @@ const blogWithNoTitle =
         likes: 12
     }
 
+const firstBlogButMoreLikes =
+    {
+        title: 'blogi',
+        author: 'maija meikalainen',
+        url: 'www.blogi.fi',
+        likes: 5
+    }
 beforeEach(async () => {
     await Blog.deleteMany({})
     let blogObject = new Blog(initialBlogs[0])
@@ -100,7 +107,29 @@ test('new blog has to contain both title and url', async () => {
         .send(blogWithNoTitle)
         .expect(400)
 })
-  
+
+test('deleted blog decreases the number of blogs by one', async () => {
+    const response = await api.get('/api/blogs')
+    const id = response.body[0].id
+
+    await api
+        .delete(`/api/blogs/${id}`)
+        .expect(204)
+})
+
+test('updating likes works', async () => {
+    const response = await api.get('/api/blogs')
+    const id = response.body[0].id
+
+    await api
+        .put(`/api/blogs/${id}`)
+        .send(firstBlogButMoreLikes)
+        .expect(200)
+    
+    const newResponse = await api.get('/api/blogs')
+    expect(newResponse.body[0].likes).toBe(5)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
