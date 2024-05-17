@@ -1,4 +1,4 @@
-# Full stack 2021
+# Full stack 2021 - 2024
 
 ## Tehtävät
 
@@ -7,3 +7,7 @@
 [Osa 1](https://github.com/hackinen/fullstack2021/tree/main/osa1)
 
 [Osa 2](https://github.com/hackinen/fullstack2021/tree/main/osa2)
+
+[Osa 4](https://github.com/hackinen/fullstack2021/tree/main/osa4)
+
+[Osa 5](https://github.com/hackinen/fullstack2021/tree/main/osa5)
