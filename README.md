@@ -8,6 +8,8 @@
 
 [Osa 2](https://github.com/hackinen/fullstack2021/tree/main/osa2)
 
+[Osa 3 (erillinen repositorio)](https://github.com/hackinen/fullstack-osa3)
+
 [Osa 4](https://github.com/hackinen/fullstack2021/tree/main/osa4)
 
 [Osa 5](https://github.com/hackinen/fullstack2021/tree/main/osa5)
