@@ -1,11 +1,24 @@
 import { useState, useEffect } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const [expandedView, setExpandedView] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
 
   const toggleView = () => {
-    setExpandedView(!expandedView);
-  };
+    setExpandedView(!expandedView)
+  }
+
+  const likeBlog = () => {
+    const updatedBlog = {...blog, likes: likes + 1}
+    blogService.update(blog.id, updatedBlog)
+      .then(response => {
+        setLikes(response.likes)
+      })
+      .catch(error => {
+        console.error('Error liking the blog:', error)
+      })
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -25,8 +38,8 @@ const Blog = ({ blog }) => {
         <div>
           <div>{blog.url}</div>
           <div>
-            likes {blog.likes}
-            <button>like</button>
+            likes {likes}
+            <button onClick={likeBlog}>like</button>
           </div>
           <div>{blog.user.name}</div>
         </div>

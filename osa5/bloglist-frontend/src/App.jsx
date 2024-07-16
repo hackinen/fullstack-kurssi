@@ -12,7 +12,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
 
 
-
   //notifications/errors
   const [notification, setNotification] = useState(null)
   const [messageType, setmessageType] = useState("notification")
