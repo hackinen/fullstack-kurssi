@@ -14,19 +14,19 @@ const App = () => {
 
   //notifications/errors
   const [notification, setNotification] = useState(null)
-  const [messageType, setmessageType] = useState("notification")
+  const [messageType, setmessageType] = useState('notification')
 
   //login info
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
 
   //EFFECT HOOKS
-  
+
   // get blogs
   useEffect(() => {
-    updateBlogs()  
+    updateBlogs()
   }, [])
 
   // get possible logged user info during page refresh
@@ -41,16 +41,16 @@ const App = () => {
 
 
 
-  
+
   // when pressing submit button, add new blog
   const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
-        .then(returnedBlog => {
-          console.log(returnedBlog)
-          setBlogs(blogs.concat(returnedBlog))
-          showNotification(`A new blog ${returnedBlog.title} by ${returnedBlog.author} added.`, 'notification')
-        })
+      .then(returnedBlog => {
+        console.log(returnedBlog)
+        setBlogs(blogs.concat(returnedBlog))
+        showNotification(`A new blog ${returnedBlog.title} by ${returnedBlog.author} added.`, 'notification')
+      })
   }
 
   const updateBlogs = () => {
@@ -73,7 +73,7 @@ const App = () => {
     console.log('logging in with', username, password)
 
     // login with loginservice
-    loginService.login({ username, password }).then(user =>{
+    loginService.login({ username, password }).then(user => {
       // save token to browser local storage
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
       // save token to blogService
@@ -82,10 +82,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     })
-    .catch(exception => {
-      console.log(exception)
-      showNotification('wrong username or password', 'error')
-    })
+      .catch(exception => {
+        console.log(exception)
+        showNotification('wrong username or password', 'error')
+      })
   }
 
   const handleLogout = (event) => {
@@ -105,7 +105,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -114,7 +114,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -122,7 +122,7 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
 
@@ -144,14 +144,14 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={notification} messageType={messageType} />
       <div>
-        {user.name} logged in 
+        {user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </div>
       <Togglable buttonLabel='create new blog'>
         <BlogForm createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog => (
-          <Blog user={user} blog={blog} updateBlogs={updateBlogs}/>
+        <Blog key={blog.id} user={user} blog={blog} updateBlogs={updateBlogs}/>
       ))}
     </div>
   )
