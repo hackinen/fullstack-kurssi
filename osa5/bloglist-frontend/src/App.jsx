@@ -26,9 +26,7 @@ const App = () => {
   
   // get blogs
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    updateBlogs()  
   }, [])
 
   // get possible logged user info during page refresh
@@ -55,6 +53,11 @@ const App = () => {
         })
   }
 
+  const updateBlogs = () => {
+    blogService.getAll().then(blogs => {
+      setBlogs(blogs.sort((a,b) => b.likes - a.likes))
+    })
+  }
 
   const showNotification = (message, type) => {
     setmessageType(type)
@@ -146,9 +149,9 @@ const App = () => {
       </div>
       <Togglable buttonLabel='create new blog'>
         <BlogForm createBlog={addBlog} />
-      </Togglable>     
+      </Togglable>
       {blogs.map(blog => (
-          <Blog blog={blog} />
+          <Blog blog={blog} updateBlogs={updateBlogs}/>
       ))}
     </div>
   )

@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlogs }) => {
   const [expandedView, setExpandedView] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
 
   const toggleView = () => {
     setExpandedView(!expandedView)
   }
 
   const likeBlog = () => {
-    const updatedBlog = {...blog, likes: likes + 1}
+    const updatedBlog = {...blog, likes: blog.likes + 1}
     blogService.update(blog.id, updatedBlog)
       .then(response => {
-        setLikes(response.likes)
+        updateBlogs()
       })
       .catch(error => {
         console.error('Error liking the blog:', error)
@@ -38,7 +37,7 @@ const Blog = ({ blog }) => {
         <div>
           <div>{blog.url}</div>
           <div>
-            likes {likes}
+            likes {blog.likes}
             <button onClick={likeBlog}>like</button>
           </div>
           <div>{blog.user.name}</div>
