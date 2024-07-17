@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateBlogs }) => {
+const Blog = ({ user, blog, updateBlogs }) => {
   const [expandedView, setExpandedView] = useState(false)
 
   const toggleView = () => {
@@ -11,12 +11,24 @@ const Blog = ({ blog, updateBlogs }) => {
   const likeBlog = () => {
     const updatedBlog = {...blog, likes: blog.likes + 1}
     blogService.update(blog.id, updatedBlog)
-      .then(response => {
+      .then(() => {
         updateBlogs()
       })
       .catch(error => {
         console.error('Error liking the blog:', error)
       })
+  }
+
+  const deleteBlog = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      blogService.deleteBlog(blog.id)
+        .then(() => {
+          updateBlogs()
+        })
+        .catch(error => {
+          console.error('Error deleting the blog:', error)
+        })
+    }
   }
 
   const blogStyle = {
@@ -41,6 +53,12 @@ const Blog = ({ blog, updateBlogs }) => {
             <button onClick={likeBlog}>like</button>
           </div>
           <div>{blog.user.name}</div>
+          {user && user.username === blog.user.username && (
+            <button
+              onClick={deleteBlog}>
+              remove
+            </button>
+          )}
         </div>
       )}
     </div>
