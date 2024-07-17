@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ user, blog, updateBlogs }) => {
   const [expandedView, setExpandedView] = useState(false)
@@ -63,6 +64,10 @@ const Blog = ({ user, blog, updateBlogs }) => {
       )}
     </div>
   )
+}
+
+Blog.PropTypes = {
+  updateBlogs: PropTypes.func.isRequired,
 }
 
 export default Blog
